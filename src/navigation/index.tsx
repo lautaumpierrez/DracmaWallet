@@ -1,8 +1,16 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen, MemberScreen } from '../screens/';
+import { HomeScreen, MemberScreen, SendTransactionScreen } from '../screens/';
+import { primaryColor } from '../constants/tokens';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParams = {
+  Home: undefined;
+  Member: undefined;
+  SendTransaction: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParams>();
+
 const Navigator = () => {
   return (
     <Stack.Navigator>
@@ -15,6 +23,17 @@ const Navigator = () => {
         name="Member"
         component={MemberScreen}
         options={{ title: 'Member', headerShown: false }}
+      />
+      <Stack.Screen
+        name="SendTransaction"
+        component={SendTransactionScreen}
+        options={{
+          title: 'Send transaction',
+          headerShown: true,
+          headerTintColor: '#fff',
+          headerStyle: { backgroundColor: primaryColor },
+          headerTitleAlign: 'center'
+        }}
       />
     </Stack.Navigator>
   );

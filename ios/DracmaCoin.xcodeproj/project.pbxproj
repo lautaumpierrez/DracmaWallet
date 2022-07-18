@@ -43,6 +43,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-DracmaCoin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DracmaCoin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = DracmaCoin/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-DracmaCoin-DracmaCoinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DracmaCoin-DracmaCoinTests.release.xcconfig"; path = "Target Support Files/Pods-DracmaCoin-DracmaCoinTests/Pods-DracmaCoin-DracmaCoinTests.release.xcconfig"; sourceTree = "<group>"; };
+		B706D3FD2885598500724839 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* DracmaCoin */ = {
 			isa = PBXGroup;
 			children = (
+				B706D3FC2885589900724839 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -135,6 +137,14 @@
 				00E356EE1AD99517003FC87E /* DracmaCoinTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B706D3FC2885589900724839 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B706D3FD2885598500724839 /* Ionicons.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {

@@ -17,17 +17,11 @@ const EtherContext = createContext<{
 
 const EtherProvider = ({ children }: PropsWithChildren<{}>) => {
   const [wallet, setWallet] = useState<Wallet>();
-  const loadPersistedWallet = async () => {
-    await etherServices.loadSetup();
-  };
-
   useEffect(() => {
     etherServices.subscribe(() => {
       setWallet(etherServices.wallet);
     });
     setWallet(etherServices.wallet);
-
-    loadPersistedWallet();
   }, []);
 
   return (
