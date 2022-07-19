@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   StyleSheet,
@@ -7,14 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import NumberFormat from 'react-number-format';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 import { primaryColor } from '../constants/tokens';
 import { EtherContext } from '../context/Ether';
-import { etherscanServices } from '../services/EtherScan';
+import FeaturesList from '../components/FeaturesList';
 
 const MemberScreen = () => {
   const { ether } = useContext(EtherContext);
@@ -24,18 +24,31 @@ const MemberScreen = () => {
 
   const getBalance = async () => {
     const gettedBalance = await ether.getBalance();
-    await ether.getTransactions();
-    await etherscanServices.getTransactions(ether.wallet?.address ?? '');
     setBalance(gettedBalance ?? 0);
   };
-  useEffect(() => {
-    getBalance();
-  }, []);
+
+  const showETHBalance = async () => {
+    const ethBalance = await ether.getETHBalance();
+    Alert.alert('Your ethers balance is', `ETH$${ethBalance}`);
+  };
+  useFocusEffect(
+    useCallback(() => {
+      getBalance();
+    }, []),
+  );
 
   return (
     <SafeAreaView>
       <View>
         <View style={styles.balanceContainer}>
+          <View style={styles.ethereumIconContainer}>
+            <TouchableOpacity onPress={showETHBalance}>
+              <Image
+                source={require('../assets/icons/ethereum.png')}
+                style={styles.ethereumIcon}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.balanceTitle}>Your balance</Text>
           <View style={styles.balance}>
             <Text style={styles.balanceCurrency}>DRC</Text>
@@ -50,7 +63,9 @@ const MemberScreen = () => {
             />
           </View>
           <View style={styles.showTransactionsHistoryContainer}>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => push('TransactionsHistory')}>
               <View style={styles.showTransactionsHistory}>
                 <Text style={styles.showTransactionsHistoryText}>
                   Transactions History
@@ -61,23 +76,7 @@ const MemberScreen = () => {
         </View>
         <View style={styles.body}>
           <Text style={styles.bodyTitle}> New features </Text>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => push('SendTransaction')}>
-            <View style={styles.sendTransaction}>
-              <Image
-                style={styles.sendTransactionIcon}
-                source={require('../assets/icons/send_money.png')}
-              />
-              <Text style={styles.sendTransactionText}>Send transaction</Text>
-              <Icon
-                style={styles.sendTransactionGoIcon}
-                name="chevron-forward-outline"
-                color="#444"
-                size={30}
-              />
-            </View>
-          </TouchableOpacity>
+          <FeaturesList />
         </View>
       </View>
     </SafeAreaView>
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    marginTop: 20,
+    marginTop: 30,
     padding: 20,
   },
   bodyTitle: {
@@ -143,32 +142,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 20,
   },
-  sendTransaction: {
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 1,
-    height: 100,
-    backgroundColor: '#fff',
-    borderRadius: 10,
 
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingVertical: 20,
-    paddingRight: 15,
+  ethereumIconContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
-  sendTransactionIcon: {
-    width: 80,
-    height: 80,
-  },
-  sendTransactionText: {
-    fontSize: 20,
-    flexGrow: 1,
-    textAlign: 'center',
-  },
-  sendTransactionGoIcon: {
-    paddingHorizontal: 10,
+  ethereumIcon: {
+    width: 50,
+    height: 50,
   },
 });
 export default MemberScreen;

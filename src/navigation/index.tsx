@@ -1,12 +1,18 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen, MemberScreen, SendTransactionScreen } from '../screens/';
+import {
+  HomeScreen,
+  MemberScreen,
+  SendTransactionScreen,
+  TransactionsHistoryScreen,
+} from '../screens/';
 import { primaryColor } from '../constants/tokens';
 
 export type RootStackParams = {
   Home: undefined;
   Member: undefined;
   SendTransaction: undefined;
+  TransactionsHistory: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -22,7 +28,10 @@ const Navigator = () => {
       <Stack.Screen
         name="Member"
         component={MemberScreen}
-        options={{ title: 'Member', headerShown: false }}
+        options={{
+          title: 'Member',
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="SendTransaction"
@@ -32,7 +41,18 @@ const Navigator = () => {
           headerShown: true,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: primaryColor },
-          headerTitleAlign: 'center'
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name="TransactionsHistory"
+        component={TransactionsHistoryScreen}
+        options={{
+          title: 'Transactions history',
+          headerShown: true,
+          headerTintColor: '#fff',
+          headerStyle: { backgroundColor: primaryColor },
+          headerTitleAlign: 'center',
         }}
       />
     </Stack.Navigator>

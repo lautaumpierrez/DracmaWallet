@@ -1,9 +1,10 @@
 import 'react-native-get-random-values';
 import '@ethersproject/shims';
-import { Contract, ethers, utils, Wallet } from 'ethers';
+import { Contract, ethers, utils, Wallet, BigNumber } from 'ethers';
 import AsyncStorage from '@react-native-community/async-storage';
 import env from '../../.env.js';
 import DRCBuild from '../../build/contracts/DracmaCoin.json';
+import { SendTransactionFormState } from '../types/Transactions.js';
 
 export class EtherServices {
   public provider =
@@ -13,13 +14,14 @@ export class EtherServices {
 
   public wallet?: Wallet;
   public contract?: Contract;
+  public walletBalance?: number;
 
-  public subscriber: () => void = () => {};
+  public subscriber: () => void = () => { };
 
+  // * Account
   public async getWalletFromMnemonic(phrase: string): Promise<Wallet> {
     this.wallet = Wallet.fromMnemonic(phrase);
-    await this.wallet.connect(this.provider);
-
+    this.wallet = await this.wallet.connect(this.provider);
     this.loadContract();
     await AsyncStorage.setItem('mnemonic_phrase', phrase);
     this.subscriber();
@@ -30,13 +32,13 @@ export class EtherServices {
     this.contract = new ethers.Contract(
       env.ethers.dracma_address,
       DRCBuild.abi,
-      this.provider,
+      this.wallet,
     );
   }
 
   public async generateWallet(): Promise<Wallet> {
     this.wallet = await Wallet.createRandom();
-    await this.wallet.connect(this.provider);
+    this.wallet = await this.wallet.connect(this.provider);
     await AsyncStorage.setItem('mnemonic_phrase', this.wallet.mnemonic.phrase);
 
     this.loadContract();
@@ -45,13 +47,15 @@ export class EtherServices {
   }
   public async loadSetup(): Promise<Wallet | undefined> {
     const mnemonicPhrase = await AsyncStorage.getItem('mnemonic_phrase');
-    console.log(mnemonicPhrase);
     if (mnemonicPhrase) {
       await this.getWalletFromMnemonic(mnemonicPhrase);
     }
     return this.wallet;
   }
-
+  public async forgetWallet() {
+    await AsyncStorage.removeItem('mnemonic_phrase');
+    this.wallet = undefined;
+  }
   public subscribe(sub: () => void) {
     this.subscriber = sub;
   }
@@ -64,13 +68,39 @@ export class EtherServices {
   public async getBalance(): Promise<number | undefined> {
     if (this.contract && this.wallet) {
       const dracmasBalance = await this.contract.balanceOf(this.wallet.address);
+      this.walletBalance = this.parseDracmas(dracmasBalance);
       return this.parseDracmas(dracmasBalance);
     }
     return undefined;
   }
+  public async getETHBalance(): Promise<string | undefined> {
+    if (this.wallet) {
+      const balance = await this.wallet.getBalance();
+      return ethers.utils.formatEther(balance);
+    }
+    return undefined;
+  }
 
+  public async getGasPrice() {
+    const gasPrice = await this.provider.getGasPrice();
+    return gasPrice;
+  }
+
+  public etherFormat(value: BigNumber): string {
+    return ethers.utils.formatEther(value);
+  }
+  // * Transactions
   public async getTransactions() {
     // TODO: make method to map blocks and get transactions history
+  }
+
+  public async sendTransaction({ to, amount }: SendTransactionFormState) {
+    const result = await this.contract?.transfer(
+      to,
+      ethers.utils.parseUnits(amount.toString(), 18),
+    );
+
+    return result;
   }
 }
 

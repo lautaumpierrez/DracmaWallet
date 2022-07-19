@@ -8,7 +8,11 @@ import { primaryColor } from './src/constants/tokens';
 const App = () => {
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={primaryColor} barStyle="light-content" />
+      <StatusBar
+        backgroundColor={primaryColor}
+        barStyle="dark-content"
+        animated
+      />
       <EtherProvider>
         <Navigator />
       </EtherProvider>

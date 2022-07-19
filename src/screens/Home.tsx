@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { EtherContext } from '../context/Ether';
 import Loader from '../components/Loader';
 import { useNavigation } from '@react-navigation/native';

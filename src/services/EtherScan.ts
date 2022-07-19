@@ -1,4 +1,5 @@
 import env from '../../.env';
+import { Transaction } from '../types/Transactions';
 import { getFetch } from '../utils/fetch';
 
 export class Etherscan {
@@ -7,8 +8,7 @@ export class Etherscan {
     env.etherscan.api_key,
   );
 
-  public async getTransactions(address: string) {
-    console.log(address);
+  public async getTransactions(address: string): Promise<Transaction[]> {
     const response = await this.fetch('/', {}, [
       ['module', 'account'],
       ['action', 'tokentx'],
@@ -17,8 +17,7 @@ export class Etherscan {
       ['startblock', '0'],
       ['endblock', '99999999'],
     ]);
-    const result = await response.json();
-    console.log(result);
+    const { result } = await response.json();
     return result;
   }
 }
